@@ -1,19 +1,43 @@
-import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export default function Page() {
+export default function DashboardPage() {
   return (
-    <div className="flex">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
+    <main className="p-8">
+      <h1 className="mb-6 text-3xl font-bold">Welcome to Preorder Manager</h1>
+      <p className="mb-10 text-muted-foreground">
+        Manage your product preorders efficiently. Use filters, sorting, and
+        pagination to stay on top of preorder activity.
+      </p>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Preorders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            View, filter, and manage all preorders in one place.
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Create Preorder</CardTitle>
+          </CardHeader>
+          <CardContent>
+            Add new preorder records with flexible start and end dates.
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Update & Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+            Edit existing preorders, toggle active/inactive status, or delete
+            records instantly.
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </main>
   )
 }
