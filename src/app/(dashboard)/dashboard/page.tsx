@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function DashboardPage() {
   return (
-    <main className="p-8">
+    <main className="">
       <h1 className="mb-6 text-3xl font-bold">Welcome to Preorder Manager</h1>
       <p className="mb-10 text-muted-foreground">
         Manage your product preorders efficiently. Use filters, sorting, and

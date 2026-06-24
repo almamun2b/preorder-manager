@@ -1,9 +1,10 @@
 import { TooltipProvider } from '@/components/ui/tooltip'
 import type { Metadata } from 'next'
-import { Geist_Mono, Roboto } from 'next/font/google'
+import { Geist_Mono, Inter } from 'next/font/google'
+import { Toaster } from 'sonner'
 import './globals.css'
 
-const robotoSans = Roboto({
+const interSans = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-sans',
@@ -27,10 +28,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${robotoSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${interSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <TooltipProvider>{children}</TooltipProvider>
+        <Toaster />
       </body>
     </html>
   )
