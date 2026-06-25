@@ -1,5 +1,18 @@
-const PreorderEditPage = () => {
-  return <div>PreorderEditPage</div>
-}
+import { PreorderForm } from '@/components/modules/preorder/PreorderForm'
 
-export default PreorderEditPage
+export default function PreorderEditPage() {
+  const mockData = {
+    name: 'Multi variant 3',
+    products: '1',
+    preorderWhen: 'regardless-of-stock' as const,
+    startsAt: '2025-12-15T20:24',
+    endsAt: '',
+    status: true,
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-4xl flex-1">
+      <PreorderForm data={mockData} />
+    </div>
+  )
+}

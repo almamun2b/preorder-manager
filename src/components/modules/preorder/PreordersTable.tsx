@@ -21,7 +21,7 @@ import { SortDropdown } from './SortDropdown'
 
 type Tab = 'all' | 'active' | 'inactive'
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 8
 
 const allPreorders = [
   {
