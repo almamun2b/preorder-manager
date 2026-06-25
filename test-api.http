@@ -15,62 +15,17 @@
 ### PREORDER MANAGEMENT MODULE
 ### =========================================================================
 
-### 1. Get All Preorders (with filtering, sorting, and pagination)
+### 1. Get All Preorders (basic)
 # @name getAllPreorders
 GET {{baseUrl}}/preorders
 Content-Type: application/json
 
-### 1.1. Get All Preorders - Filtered by Status (all)
-# @name getAllPreordersStatusAll
-GET {{baseUrl}}/preorders?status=all
+### 2. Get All Preorders (with filters, sorting, pagination, and search)
+# @name getAllPreordersWithQuery
+GET {{baseUrl}}/preorders?status=active&sortBy=createdAt&sortOrder=desc&page=1&limit=5&search=Ultra
 Content-Type: application/json
 
-### 2. Get All Preorders - Filtered by Status (active)
-# @name getAllActivePreorders
-GET {{baseUrl}}/preorders?status=active
-Content-Type: application/json
-
-### 3. Get All Preorders - Filtered by Status (inactive)
-# @name getAllInactivePreorders
-GET {{baseUrl}}/preorders?status=inactive
-Content-Type: application/json
-
-### 4. Get All Preorders - Sorted by Name (ascending)
-# @name getAllPreordersSortedByName
-GET {{baseUrl}}/preorders?sortBy=name&sortOrder=asc
-Content-Type: application/json
-
-### 5. Get All Preorders - Sorted by Created Date (descending)
-# @name getAllPreordersSortedByCreated
-GET {{baseUrl}}/preorders?sortBy=createdAt&sortOrder=desc
-Content-Type: application/json
-
-### 6. Get All Preorders - Sorted by Start Date
-# @name getAllPreordersSortedByStartsAt
-GET {{baseUrl}}/preorders?sortBy=startsAt&sortOrder=asc
-Content-Type: application/json
-
-### 7. Get All Preorders - Sorted by End Date
-# @name getAllPreordersSortedByEndsAt
-GET {{baseUrl}}/preorders?sortBy=endsAt&sortOrder=desc
-Content-Type: application/json
-
-### 8. Get All Preorders - With Pagination
-# @name getAllPreordersPaginated
-GET {{baseUrl}}/preorders?page=1&limit=2
-Content-Type: application/json
-
-### 9. Get All Preorders - With Search
-# @name getAllPreordersSearch
-GET {{baseUrl}}/preorders?search=Ultra
-Content-Type: application/json
-
-### 10. Get All Preorders - Combined Filters (status + sort + pagination + search)
-# @name getAllPreordersCombined
-GET {{baseUrl}}/preorders?status=active&sortBy=createdAt&sortOrder=desc&page=1&limit=5&search=sale
-Content-Type: application/json
-
-### 11. Create Preorder
+### 3. Create Preorder
 # @name createPreorder
 POST {{baseUrl}}/preorders
 Content-Type: application/json
@@ -84,53 +39,25 @@ Content-Type: application/json
   "status": true
 }
 
-### 12. Create Preorder (without dates)
-# @name createPreorderNoDates
-POST {{baseUrl}}/preorders
-Content-Type: application/json
-
-{
-  "name": "Winter Collection",
-  "products": 50,
-  "preorderWhen": "OUT_OF_STOCK",
-  "status": true
-}
-
-### 13. Get Preorder by ID
+### 4. Get Preorder by ID
 # @name getPreorderById
 GET {{baseUrl}}/preorders/{{preorderId}}
 Content-Type: application/json
 
-### 14. Update Preorder (Partial Update)
+### 5. Update Preorder
 # @name updatePreorder
 PATCH {{baseUrl}}/preorders/{{preorderId}}
 Content-Type: application/json
 
 {
   "name": "Updated Summer Sale 2024",
-  "products": 150
-}
-
-### 15. Update Preorder (Update dates)
-# @name updatePreorderDates
-PATCH {{baseUrl}}/preorders/{{preorderId}}
-Content-Type: application/json
-
-{
+  "products": 150,
   "startsAt": "2024-06-15T00:00:00.000Z",
-  "endsAt": "2024-09-15T23:59:59.999Z"
-}
-
-### 16. Update Preorder (Update preorder condition)
-# @name updatePreorderCondition
-PATCH {{baseUrl}}/preorders/{{preorderId}}
-Content-Type: application/json
-
-{
+  "endsAt": "2024-09-15T23:59:59.999Z",
   "preorderWhen": "REGARDLESS_OF_STOCK"
 }
 
-### 17. Update Preorder Status (dedicated endpoint)
+### 6. Update Preorder Status
 # @name updatePreorderStatus
 PATCH {{baseUrl}}/preorders/{{preorderId}}/status
 Content-Type: application/json
@@ -139,7 +66,7 @@ Content-Type: application/json
   "status": true
 }
 
-### 18. Delete Preorder
+### 7. Delete Preorder
 # @name deletePreorder
 DELETE {{baseUrl}}/preorders/{{preorderId}}
 Content-Type: application/json
