@@ -13,14 +13,16 @@ const createPreorderSchema = z.object({
     message:
       "Preorder condition must be either 'REGARDLESS_OF_STOCK' or 'OUT_OF_STOCK'",
   }),
-  startsAt: z
-    .string()
-    .datetime({ message: 'Start date must be a valid ISO datetime' })
+  startsAt: z.iso
+    .datetime({ offset: true })
+    .or(z.iso.date())
+    .or(z.date())
     .optional()
     .nullable(),
-  endsAt: z
-    .string()
-    .datetime({ message: 'End date must be a valid ISO datetime' })
+  endsAt: z.iso
+    .datetime({ offset: true })
+    .or(z.iso.date())
+    .or(z.date())
     .optional()
     .nullable(),
   status: z
@@ -46,14 +48,16 @@ const updatePreorderSchema = z.object({
         "Preorder condition must be either 'REGARDLESS_OF_STOCK' or 'OUT_OF_STOCK'",
     })
     .optional(),
-  startsAt: z
-    .string()
-    .datetime({ message: 'Start date must be a valid ISO datetime' })
+  startsAt: z.iso
+    .datetime({ offset: true })
+    .or(z.iso.date())
+    .or(z.date())
     .optional()
     .nullable(),
-  endsAt: z
-    .string()
-    .datetime({ message: 'End date must be a valid ISO datetime' })
+  endsAt: z.iso
+    .datetime({ offset: true })
+    .or(z.iso.date())
+    .or(z.date())
     .optional()
     .nullable(),
   status: z.boolean({ message: 'Status must be true or false' }).optional(),
