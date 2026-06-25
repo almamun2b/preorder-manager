@@ -30,7 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
-import z from 'zod'
+import z from 'zod/v3'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
