@@ -51,12 +51,12 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: data?.name || '',
-      products: data?.products || '1',
-      preorderWhen: data?.preorderWhen || 'regardless-of-stock',
-      startsAt: data?.startsAt || '',
-      endsAt: data?.endsAt || '',
-      status: data?.status !== undefined ? data.status : true,
+      name: data?.name ?? '',
+      products: data?.products ?? '1',
+      preorderWhen: data?.preorderWhen ?? 'regardless-of-stock',
+      startsAt: data?.startsAt ?? '',
+      endsAt: data?.endsAt ?? '',
+      status: data?.status ?? true,
     },
     mode: 'onChange',
   })
