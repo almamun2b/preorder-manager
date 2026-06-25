@@ -46,6 +46,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/adapter-libsql": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",
