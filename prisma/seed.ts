@@ -1,4 +1,4 @@
-import { prisma } from '@/config/prisma'
+import { prisma } from '@/backend/config/prisma'
 import { PreorderWhen } from '@/generated/prisma/enums'
 
 async function main() {
@@ -64,7 +64,7 @@ async function main() {
         preorderWhen: PreorderWhen.REGARDLESS_OF_STOCK,
         startsAt: new Date('2026-08-10T00:00:00Z'),
         endsAt: new Date('2026-08-20T23:59:59Z'),
-        status: true,
+        status: false,
       },
       {
         name: 'Apple TV 8K',

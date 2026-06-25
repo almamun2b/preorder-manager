@@ -144,7 +144,7 @@ export class QueryBuilder<
     if (searchText && fields.length > 0) {
       this.andConditions.push({
         OR: fields.map((field) => ({
-          [field]: { contains: searchText, mode: 'insensitive' },
+          [field]: { contains: searchText },
         })),
       })
     }

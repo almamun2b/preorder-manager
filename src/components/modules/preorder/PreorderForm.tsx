@@ -33,12 +33,18 @@ import { Controller, useForm } from 'react-hook-form'
 import z from 'zod/v3'
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z
+    .string()
+    .min(1, { message: 'Preorder name is required' })
+    .max(255, { message: 'Preorder name must be less than 255 characters' }),
   products: z.string().min(1, 'Product number is required'),
-  preorderWhen: z.enum(['regardless-of-stock', 'out-of-stock']),
+  preorderWhen: z.enum(['REGARDLESS_OF_STOCK', 'OUT_OF_STOCK'], {
+    message:
+      "Preorder condition must be either 'REGARDLESS_OF_STOCK' or 'OUT_OF_STOCK'",
+  }),
   startsAt: z.string().optional(),
   endsAt: z.string().optional(),
-  status: z.boolean(),
+  status: z.boolean({ message: 'Status must be true or false' }).optional(),
 })
 
 type FormSchemaType = z.infer<typeof formSchema>
@@ -53,7 +59,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
     defaultValues: {
       name: data?.name ?? '',
       products: data?.products ?? '1',
-      preorderWhen: data?.preorderWhen ?? 'regardless-of-stock',
+      preorderWhen: data?.preorderWhen ?? 'REGARDLESS_OF_STOCK',
       startsAt: data?.startsAt ?? '',
       endsAt: data?.endsAt ?? '',
       status: data?.status ?? true,
@@ -66,7 +72,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-8 pb-10">
+    <div className="mx-auto w-full max-w-4xl space-y-8 pb-4">
       <div className="flex items-center justify-between font-medium">
         <Button
           variant="outline"
@@ -99,7 +105,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
         </CardHeader>
         <CardContent className="px-5">
           <form id="form-preorder" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup>
+            <FieldGroup className="gap-0">
               <Controller
                 name="name"
                 control={form.control}
@@ -202,10 +208,10 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                           <SelectValue placeholder="Select option" />
                         </SelectTrigger>
                         <SelectContent position="popper">
-                          <SelectItem value="regardless-of-stock">
+                          <SelectItem value="REGARDLESS_OF_STOCK">
                             Regardless of stock
                           </SelectItem>
-                          <SelectItem value="out-of-stock">
+                          <SelectItem value="OUT_OF_STOCK">
                             Only when out of stock
                           </SelectItem>
                         </SelectContent>
@@ -287,7 +293,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                   <Field
                     data-invalid={fieldState.invalid}
                     orientation="responsive"
-                    className="grid grid-cols-[260px_1fr] items-center gap-4 py-6 pb-10"
+                    className="grid grid-cols-[260px_1fr] items-center gap-4 py-6 pb-8"
                   >
                     <FieldContent className="flex flex-col gap-1">
                       <FieldLabel htmlFor={field.name}>Status</FieldLabel>
