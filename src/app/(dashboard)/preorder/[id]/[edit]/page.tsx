@@ -4,7 +4,7 @@ export default function PreorderEditPage() {
   const mockData = {
     name: 'Multi variant 3',
     products: '1',
-    preorderWhen: 'regardless-of-stock' as const,
+    preorderWhen: 'REGARDLESS_OF_STOCK' as const,
     startsAt: '2025-12-15T20:24',
     endsAt: '',
     status: true,
