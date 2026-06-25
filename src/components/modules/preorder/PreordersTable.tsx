@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Package, Pencil } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { DeleteDialog } from './DeleteDialog'
@@ -128,6 +128,8 @@ export function PreordersTable() {
     console.log(activeTab, 'activeTab')
   }
 
+  const isEmpty = currentData.length === 0
+
   return (
     <section className="w-full">
       <div className="mb-6 flex items-center justify-between">
@@ -167,6 +169,7 @@ export function PreordersTable() {
             setSortBy={setSortBy}
             sortOrder={sortOrder}
             setSortOrder={setSortOrder}
+            isDisabled={isEmpty}
           />
         </CardHeader>
 
@@ -176,7 +179,8 @@ export function PreordersTable() {
               <TableRow>
                 <TableHead className="w-10 px-4">
                   <Checkbox
-                    checked={selected.length === currentData.length}
+                    disabled={isEmpty}
+                    checked={selected.length === currentData.length && !isEmpty}
                     className="size-4.5 border-primary/50 bg-white"
                     onCheckedChange={(checked) =>
                       toggleSelectAll(checked as boolean)
@@ -192,71 +196,98 @@ export function PreordersTable() {
                 <TableHead className="w-30 pr-5 text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody className="[&_tr:last-child]:border-b">
-              {currentData.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="px-4">
-                    <Checkbox
-                      checked={selected.includes(order.id)}
-                      className="size-4.5 border-primary/50"
-                      onCheckedChange={(checked) =>
-                        toggleSelectRow(order.id, checked as boolean)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell className="font-semibold">{order.name}</TableCell>
-                  <TableCell>{order.products}</TableCell>
-                  <TableCell>{order.preorderWhen}</TableCell>
-                  <TableCell>{order.startsAt}</TableCell>
-                  <TableCell>{order.endsAt || '—'}</TableCell>
-                  <TableCell>
-                    <Switch
-                      defaultChecked={order.status}
-                      className="h-5.5! w-9! cursor-pointer rounded-md! [&_span]:h-4! [&_span]:w-4! [&_span]:rounded-sm! data-[state=checked]:[&_span]:translate-x-4! data-[state=unchecked]:[&_span]:translate-x-0.5!"
-                    />
-                  </TableCell>
-                  <TableCell className="flex justify-center gap-2 pr-5">
-                    <Button variant="outline" size="icon" asChild>
-                      <Link href={`/preorder/${order.id}/edit`}>
-                        <Pencil className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <DeleteDialog
-                      preorderName={order.name}
-                      onConfirm={() => {
-                        console.log('Deleting preorder', order.id)
-                      }}
-                    />
+              {isEmpty ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="h-[420px] p-0">
+                    <div className="flex h-full flex-col items-center justify-center text-center">
+                      <div className="mb-6 rounded-full bg-muted p-4">
+                        <Package className="h-12 w-12 text-muted-foreground" />
+                      </div>
+                      <h3 className="mb-2 text-xl font-semibold">
+                        No preorders found
+                      </h3>
+                      <p className="mb-6 max-w-sm whitespace-normal text-muted-foreground">
+                        You haven&apos;t created any preorders yet. Create your
+                        first preorder to get started.
+                      </p>
+                      <Button asChild>
+                        <Link href="/preorder/create">Create Preorder</Link>
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                currentData.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="px-4">
+                      <Checkbox
+                        checked={selected.includes(order.id)}
+                        className="size-4.5 border-primary/50"
+                        onCheckedChange={(checked) =>
+                          toggleSelectRow(order.id, checked as boolean)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="font-semibold">
+                      {order.name}
+                    </TableCell>
+                    <TableCell>{order.products}</TableCell>
+                    <TableCell>{order.preorderWhen}</TableCell>
+                    <TableCell>{order.startsAt}</TableCell>
+                    <TableCell>{order.endsAt || '—'}</TableCell>
+                    <TableCell>
+                      <Switch
+                        defaultChecked={order.status}
+                        className="h-5.5! w-9! cursor-pointer rounded-md! [&_span]:h-4! [&_span]:w-4! [&_span]:rounded-sm! data-[state=checked]:[&_span]:translate-x-4! data-[state=unchecked]:[&_span]:translate-x-0.5!"
+                      />
+                    </TableCell>
+                    <TableCell className="flex justify-center gap-2 pr-5">
+                      <Button variant="outline" size="icon" asChild>
+                        <Link href={`/preorder/${order.id}/edit`}>
+                          <Pencil className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <DeleteDialog
+                        preorderName={order.name}
+                        onConfirm={() => {
+                          console.log('Deleting preorder', order.id)
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
 
-          <div className="flex items-center justify-center gap-6 bg-muted py-1.5">
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={page === 1}
-              className="rounded-r-none disabled:bg-gray-200"
-              onClick={() => setPage(page - 1)}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <p className="text-sm font-bold text-primary">
-              Showing {startIndex + 1} to {startIndex + currentData.length} from{' '}
-              {allPreorders.length}
-            </p>
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={page === totalPages}
-              className="rounded-l-none disabled:bg-gray-200"
-              onClick={() => setPage(page + 1)}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+          {!isEmpty && (
+            <div className="flex items-center justify-center gap-6 bg-muted py-1.5">
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={page === 1}
+                className="rounded-r-none disabled:bg-gray-200"
+                onClick={() => setPage(page - 1)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <p className="text-sm font-bold text-primary">
+                Showing {startIndex + 1} to {startIndex + currentData.length}
+                from {allPreorders.length}
+              </p>
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={page === totalPages}
+                className="rounded-l-none disabled:bg-gray-200"
+                onClick={() => setPage(page + 1)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </section>

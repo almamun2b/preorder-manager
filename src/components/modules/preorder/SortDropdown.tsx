@@ -18,6 +18,7 @@ interface SortDropdownProps {
   setSortBy: (value: string) => void
   sortOrder: 'asc' | 'desc'
   setSortOrder: (value: 'asc' | 'desc') => void
+  isDisabled?: boolean
 }
 
 const sortOptions = [
@@ -32,11 +33,17 @@ export function SortDropdown({
   setSortBy,
   sortOrder,
   setSortOrder,
+  isDisabled = false,
 }: SortDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="size-9">
+        <Button
+          disabled={isDisabled}
+          variant="outline"
+          size="icon"
+          className="size-9"
+        >
           <ArrowUpDown className="size-5" />
         </Button>
       </DropdownMenuTrigger>
