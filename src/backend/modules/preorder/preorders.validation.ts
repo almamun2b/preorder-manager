@@ -67,7 +67,7 @@ const updateStatusSchema = z.object({
   status: z.boolean({ message: 'Status must be true or false' }),
 })
 
-const getAllPreordersQuerySchema = z.object({
+const preordersQueryParamsSchema = z.object({
   status: z.enum(['all', 'active', 'inactive']).optional(),
   sortBy: z.enum(['name', 'createdAt', 'startsAt', 'endsAt']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
@@ -86,5 +86,5 @@ export const Order = {
   createPreorderSchema,
   updatePreorderSchema,
   updateStatusSchema,
-  getAllPreordersQuerySchema,
+  preordersQueryParamsSchema,
 }

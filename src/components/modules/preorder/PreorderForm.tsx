@@ -42,8 +42,8 @@ const formSchema = z.object({
     message:
       "Preorder condition must be either 'REGARDLESS_OF_STOCK' or 'OUT_OF_STOCK'",
   }),
-  startsAt: z.string().optional(),
-  endsAt: z.string().optional(),
+  startsAt: z.string().nullable().optional(),
+  endsAt: z.string().nullable().optional(),
   status: z.boolean({ message: 'Status must be true or false' }).optional(),
 })
 
@@ -90,7 +90,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
           <Button variant="outline" asChild className="h-9 px-3">
             <Link href="/preorder">Cancel</Link>
           </Button>
-          <Button type="button" className="h-9 px-3">
+          <Button type="submit" className="h-9 px-3" form="form-preorder">
             Save changes
           </Button>
         </div>
@@ -105,7 +105,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
         </CardHeader>
         <CardContent className="px-5">
           <form id="form-preorder" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup className="gap-0">
+            <FieldGroup className="gap-0 divide-y">
               <Controller
                 name="name"
                 control={form.control}
@@ -113,7 +113,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                   <Field
                     data-invalid={fieldState.invalid}
                     orientation="responsive"
-                    className="grid grid-cols-[260px_1fr] items-start gap-4 border-b py-6"
+                    className="grid grid-cols-1 items-start gap-4 py-6 lg:grid-cols-[260px_1fr]"
                   >
                     <FieldContent className="flex flex-col gap-1">
                       <FieldLabel htmlFor={field.name}>
@@ -147,7 +147,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                   <Field
                     data-invalid={fieldState.invalid}
                     orientation="responsive"
-                    className="grid grid-cols-[260px_1fr] items-start gap-4 border-b py-6"
+                    className="grid grid-cols-1 items-start gap-4 py-6 lg:grid-cols-[260px_1fr]"
                   >
                     <FieldContent className="flex flex-col gap-1">
                       <FieldLabel htmlFor={field.name}>Products</FieldLabel>
@@ -184,7 +184,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                   <Field
                     data-invalid={fieldState.invalid}
                     orientation="responsive"
-                    className="grid grid-cols-[260px_1fr] items-start gap-4 border-b py-6"
+                    className="grid grid-cols-1 items-start gap-4 py-6 lg:grid-cols-[260px_1fr]"
                   >
                     <FieldContent className="flex flex-col gap-1">
                       <FieldLabel htmlFor={field.name}>
@@ -231,7 +231,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                   <Field
                     data-invalid={fieldState.invalid}
                     orientation="responsive"
-                    className="grid grid-cols-[260px_1fr] items-start gap-4 border-b py-6"
+                    className="grid grid-cols-1 items-start gap-4 py-6 lg:grid-cols-[260px_1fr]"
                   >
                     <FieldContent className="flex flex-col gap-1">
                       <FieldLabel htmlFor={field.name}>Starts at</FieldLabel>
@@ -242,6 +242,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                     <div className="flex flex-col gap-1">
                       <Input
                         {...field}
+                        value={field.value ?? ''}
                         id={field.name}
                         type="datetime-local"
                         aria-invalid={fieldState.invalid}
@@ -262,7 +263,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                   <Field
                     data-invalid={fieldState.invalid}
                     orientation="responsive"
-                    className="grid grid-cols-[260px_1fr] items-start gap-4 border-b py-6"
+                    className="grid grid-cols-1 items-start gap-4 py-6 lg:grid-cols-[260px_1fr]"
                   >
                     <FieldContent className="flex flex-col gap-1">
                       <FieldLabel htmlFor={field.name}>Ends at</FieldLabel>
@@ -273,6 +274,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                     <div className="flex flex-col gap-1">
                       <Input
                         {...field}
+                        value={field.value ?? ''}
                         id={field.name}
                         type="datetime-local"
                         aria-invalid={fieldState.invalid}
@@ -293,7 +295,7 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
                   <Field
                     data-invalid={fieldState.invalid}
                     orientation="responsive"
-                    className="grid grid-cols-[260px_1fr] items-center gap-4 py-6 pb-8"
+                    className="grid grid-cols-1 items-center gap-4 py-6 lg:grid-cols-[260px_1fr]"
                   >
                     <FieldContent className="flex flex-col gap-1">
                       <FieldLabel htmlFor={field.name}>Status</FieldLabel>

@@ -1,5 +1,6 @@
 'use client'
 
+import { TPreordersQueryParams } from '@/backend/modules/preorder/preorders.type'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -13,122 +14,76 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { date } from '@/lib/date'
+import { getQueryParams } from '@/lib/getQueryParams'
+import type { PreordersResponse } from '@/types/preorder'
 import { ChevronLeft, ChevronRight, Package, Pencil } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { DeleteDialog } from './DeleteDialog'
 import { SortDropdown } from './SortDropdown'
 
 type Tab = 'all' | 'active' | 'inactive'
 
-const PAGE_SIZE = 8
+interface PreorderTableProps {
+  data: PreordersResponse
+}
 
-const allPreorders = [
-  {
-    id: 1,
-    name: 'Multi variant 3',
-    products: 1,
-    preorderWhen: 'out-of-stock',
-    startsAt: 'Dec 15, 2025 08:24 PM',
-    endsAt: '',
-    status: true,
-  },
-  {
-    id: 2,
-    name: 'Multi variant 2',
-    products: 1,
-    preorderWhen: 'regardless-of-stock',
-    startsAt: 'Dec 15, 2025 08:24 PM',
-    endsAt: 'Dec 15, 2025 08:27 PM',
-    status: false,
-  },
-  {
-    id: 3,
-    name: 'Multi variants 1',
-    products: 1,
-    preorderWhen: 'regardless-of-stock',
-    startsAt: 'Dec 15, 2025 08:24 PM',
-    endsAt: '',
-    status: true,
-  },
-  {
-    id: 4,
-    name: 'Partial payment',
-    products: 1,
-    preorderWhen: 'regardless-of-stock',
-    startsAt: 'Aug 17, 2025 04:56 PM',
-    endsAt: '',
-    status: true,
-  },
-  {
-    id: 5,
-    name: 'Shipping not sure',
-    products: 1,
-    preorderWhen: 'regardless-of-stock',
-    startsAt: 'Aug 17, 2025 04:56 PM',
-    endsAt: '',
-    status: false,
-  },
-  {
-    id: 6,
-    name: 'Full payment',
-    products: 1,
-    preorderWhen: 'regardless-of-stock',
-    startsAt: 'Aug 17, 2025 04:56 PM',
-    endsAt: '',
-    status: true,
-  },
-  {
-    id: 7,
-    name: 'Coming soon',
-    products: 1,
-    preorderWhen: 'regardless-of-stock',
-    startsAt: 'Dec 11, 2025 04:42 AM',
-    endsAt: '',
-    status: true,
-  },
-  {
-    id: 8,
-    name: 'With ends',
-    products: 1,
-    preorderWhen: 'regardless-of-stock',
-    startsAt: 'Aug 14, 2025 03:59 PM',
-    endsAt: '',
-    status: false,
-  },
-]
+export function PreordersTable({ data }: PreorderTableProps) {
+  const router = useRouter()
+  const { data: preorders, meta } = data
+  const [queryData, setQueryData] = useState<TPreordersQueryParams>({
+    status: 'all',
+    page: meta?.page || 1,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    limit: 8,
+  })
 
-export function PreordersTable() {
-  const [activeTab, setActiveTab] = useState<Tab>('all')
-  const [page, setPage] = useState(1)
-  const [selected, setSelected] = useState<number[]>([])
-  const [sortBy, setSortBy] = useState('name')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [selected, setSelected] = useState<string[]>([])
 
-  const totalPages = Math.ceil(allPreorders.length / PAGE_SIZE)
-  const startIndex = (page - 1) * PAGE_SIZE
-  const currentData = allPreorders.slice(startIndex, startIndex + PAGE_SIZE)
+  const isEmpty = preorders.length === 0
 
   const toggleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelected(currentData.map((p) => p.id))
+      setSelected(preorders.map((p) => p.id))
     } else {
       setSelected([])
     }
   }
 
-  const toggleSelectRow = (id: number, checked: boolean) => {
+  const toggleSelectRow = (id: string, checked: boolean) => {
     setSelected((prev) =>
       checked ? [...prev, id] : prev.filter((x) => x !== id)
     )
   }
 
-  const onChangeTab = (tab: Tab | string) => {
-    setActiveTab(tab as Tab)
-    console.log(activeTab, 'activeTab')
+  const navigate = (newParams: Partial<TPreordersQueryParams>) => {
+    const updated = { ...queryData, ...newParams }
+    setQueryData(updated)
+    router.push(`/preorder?${getQueryParams(updated)}`)
   }
 
-  const isEmpty = currentData.length === 0
+  const onChangeTab = (tab: string) => {
+    navigate({ status: tab as Tab, page: 1 })
+  }
+
+  const goPreviousPage = () => {
+    navigate({ page: queryData.page! - 1 })
+  }
+
+  const goNextPage = () => {
+    navigate({ page: queryData.page! + 1 })
+  }
+
+  const onSortByChange = (value: TPreordersQueryParams['sortBy']) => {
+    navigate({ sortBy: value, page: 1 })
+  }
+
+  const onSortOrderChange = (value: TPreordersQueryParams['sortOrder']) => {
+    navigate({ sortOrder: value, page: 1 })
+  }
 
   return (
     <section className="w-full">
@@ -165,10 +120,10 @@ export function PreordersTable() {
           </Tabs>
 
           <SortDropdown
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
+            sortBy={queryData.sortBy}
+            setSortBy={onSortByChange}
+            sortOrder={queryData.sortOrder}
+            setSortOrder={onSortOrderChange}
             isDisabled={isEmpty}
           />
         </CardHeader>
@@ -180,7 +135,7 @@ export function PreordersTable() {
                 <TableHead className="w-10 px-4">
                   <Checkbox
                     disabled={isEmpty}
-                    checked={selected.length === currentData.length && !isEmpty}
+                    checked={selected.length === preorders.length && !isEmpty}
                     className="size-4.5 border-primary/50 bg-white"
                     onCheckedChange={(checked) =>
                       toggleSelectAll(checked as boolean)
@@ -219,7 +174,7 @@ export function PreordersTable() {
                   </TableCell>
                 </TableRow>
               ) : (
-                currentData.map((order) => (
+                preorders.map((order) => (
                   <TableRow key={order.id}>
                     <TableCell className="px-4">
                       <Checkbox
@@ -234,9 +189,13 @@ export function PreordersTable() {
                       {order.name}
                     </TableCell>
                     <TableCell>{order.products}</TableCell>
-                    <TableCell>{order.preorderWhen}</TableCell>
-                    <TableCell>{order.startsAt}</TableCell>
-                    <TableCell>{order.endsAt || '—'}</TableCell>
+                    <TableCell>{order.preorderWhen.toLowerCase()}</TableCell>
+                    <TableCell>
+                      {order.startsAt ? date.utcToLocal(order.startsAt) : '—'}
+                    </TableCell>
+                    <TableCell>
+                      {order.endsAt ? date.utcToLocal(order.endsAt) : '—'}
+                    </TableCell>
                     <TableCell>
                       <Switch
                         defaultChecked={order.status}
@@ -267,22 +226,22 @@ export function PreordersTable() {
               <Button
                 variant="outline"
                 size="icon"
-                disabled={page === 1}
+                disabled={queryData.page === 1}
                 className="rounded-r-none disabled:bg-gray-200"
-                onClick={() => setPage(page - 1)}
+                onClick={goPreviousPage}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <p className="text-sm font-bold text-primary">
-                Showing {startIndex + 1} to {startIndex + currentData.length}
-                from {allPreorders.length}
+                Showing {meta.limit * (meta.page - 1) + 1} to{' '}
+                {Math.min(meta.limit * meta.page, meta.total)} from {meta.total}
               </p>
               <Button
                 variant="outline"
                 size="icon"
-                disabled={page === totalPages}
+                disabled={meta.page === meta.totalPage}
                 className="rounded-l-none disabled:bg-gray-200"
-                onClick={() => setPage(page + 1)}
+                onClick={goNextPage}
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>

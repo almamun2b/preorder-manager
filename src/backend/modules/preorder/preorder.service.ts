@@ -3,11 +3,11 @@ import { AppError } from '@/backend/utils/errors'
 import { QueryBuilder } from '@/backend/utils/queryBuilder'
 import {
   TCreatePreorder,
-  TGetAllPreordersQuery,
+  TPreordersQueryParams,
   TUpdatePreorder,
 } from './preorders.type'
 
-const getAllPreorders = async (params: TGetAllPreordersQuery) => {
+const getAllPreorders = async (params: TPreordersQueryParams) => {
   const {
     status,
     sortBy,

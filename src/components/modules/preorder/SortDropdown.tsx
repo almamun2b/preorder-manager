@@ -1,5 +1,6 @@
 'use client'
 
+import { TPreordersQueryParams } from '@/backend/modules/preorder/preorders.type'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -14,10 +15,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
 
 interface SortDropdownProps {
-  sortBy: string
-  setSortBy: (value: string) => void
-  sortOrder: 'asc' | 'desc'
-  setSortOrder: (value: 'asc' | 'desc') => void
+  sortBy: TPreordersQueryParams['sortBy']
+  setSortBy: (value: TPreordersQueryParams['sortBy']) => void
+  sortOrder: TPreordersQueryParams['sortOrder']
+  setSortOrder: (value: TPreordersQueryParams['sortOrder']) => void
   isDisabled?: boolean
 }
 
@@ -53,7 +54,9 @@ export function SortDropdown({
 
         <RadioGroup
           value={sortBy}
-          onValueChange={setSortBy}
+          onValueChange={(value) =>
+            setSortBy(value as TPreordersQueryParams['sortBy'])
+          }
           className="gap-0 py-2"
         >
           {sortOptions.map((option) => (

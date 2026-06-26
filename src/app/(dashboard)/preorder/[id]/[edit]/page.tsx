@@ -6,7 +6,7 @@ export default function PreorderEditPage() {
     products: '1',
     preorderWhen: 'REGARDLESS_OF_STOCK' as const,
     startsAt: '2025-12-15T20:24',
-    endsAt: '',
+    endsAt: null,
     status: true,
   }
 

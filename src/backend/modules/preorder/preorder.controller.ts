@@ -8,7 +8,7 @@ const getAllPreorders = async (req: NextRequest) => {
   return withErrorHandler(async () => {
     const searchParams = req.nextUrl.searchParams
 
-    const queryParams = Order.getAllPreordersQuerySchema.parse({
+    const queryParams = Order.preordersQueryParamsSchema.parse({
       status: searchParams.get('status') || undefined,
       sortBy: searchParams.get('sortBy') || undefined,
       sortOrder: searchParams.get('sortOrder') || undefined,
