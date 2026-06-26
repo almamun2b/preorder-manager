@@ -1,5 +1,6 @@
 'use client'
 
+import { deletePreorder, updatePreorderStatus } from '@/app/actions/preorder'
 import { TPreordersQueryParams } from '@/backend/modules/preorder/preorders.type'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -21,6 +22,7 @@ import { ChevronLeft, ChevronRight, Package, Pencil } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { DeleteDialog } from './DeleteDialog'
 import { SortDropdown } from './SortDropdown'
 
@@ -43,11 +45,11 @@ export function PreordersTable({ data }: PreorderTableProps) {
 
   const [selected, setSelected] = useState<string[]>([])
 
-  const isEmpty = preorders.length === 0
+  const isEmpty = preorders?.length === 0
 
   const toggleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelected(preorders.map((p) => p.id))
+      setSelected(preorders?.map((p) => p.id) || [])
     } else {
       setSelected([])
     }
@@ -83,6 +85,34 @@ export function PreordersTable({ data }: PreorderTableProps) {
 
   const onSortOrderChange = (value: TPreordersQueryParams['sortOrder']) => {
     navigate({ sortOrder: value, page: 1 })
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      const result = await deletePreorder(id)
+      if (result.success) {
+        toast.success('Preorder deleted successfully')
+        router.refresh()
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to delete preorder'
+      )
+    }
+  }
+
+  const handleStatusToggle = async (id: string, currentStatus: boolean) => {
+    try {
+      const result = await updatePreorderStatus(id, !currentStatus)
+      if (result.success) {
+        toast.success('Status updated successfully')
+        router.refresh()
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to update status'
+      )
+    }
   }
 
   return (
@@ -135,7 +165,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                 <TableHead className="w-10 px-4">
                   <Checkbox
                     disabled={isEmpty}
-                    checked={selected.length === preorders.length && !isEmpty}
+                    checked={selected.length === preorders?.length && !isEmpty}
                     className="size-4.5 border-primary/50 bg-white"
                     onCheckedChange={(checked) =>
                       toggleSelectAll(checked as boolean)
@@ -174,7 +204,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                   </TableCell>
                 </TableRow>
               ) : (
-                preorders.map((order) => (
+                preorders?.map((order) => (
                   <TableRow key={order.id}>
                     <TableCell className="px-4">
                       <Checkbox
@@ -198,7 +228,10 @@ export function PreordersTable({ data }: PreorderTableProps) {
                     </TableCell>
                     <TableCell>
                       <Switch
-                        defaultChecked={order.status}
+                        checked={order.status}
+                        onCheckedChange={() =>
+                          handleStatusToggle(order.id, order.status)
+                        }
                         className="h-5.5! w-9! cursor-pointer rounded-md! [&_span]:h-4! [&_span]:w-4! [&_span]:rounded-sm! data-[state=checked]:[&_span]:translate-x-4! data-[state=unchecked]:[&_span]:translate-x-0.5!"
                       />
                     </TableCell>
@@ -210,9 +243,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                       </Button>
                       <DeleteDialog
                         preorderName={order.name}
-                        onConfirm={() => {
-                          console.log('Deleting preorder', order.id)
-                        }}
+                        onConfirm={() => handleDelete(order.id)}
                       />
                     </TableCell>
                   </TableRow>
@@ -221,7 +252,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
             </TableBody>
           </Table>
 
-          {!isEmpty && (
+          {!isEmpty && meta && (
             <div className="flex items-center justify-center gap-6 bg-muted py-1.5">
               <Button
                 variant="outline"
@@ -233,7 +264,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <p className="text-sm font-bold text-primary">
-                Showing {meta.limit * (meta.page - 1) + 1} to{' '}
+                Showing {meta.limit * (meta?.page - 1) + 1} to{' '}
                 {Math.min(meta.limit * meta.page, meta.total)} from {meta.total}
               </p>
               <Button

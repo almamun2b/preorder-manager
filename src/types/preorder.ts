@@ -1,10 +1,11 @@
-import { Meta } from './api-response'
+import { PreorderWhen } from '@/generated/prisma/enums'
+import { Meta, SuccessResponse } from './api-response'
 
 interface Preorder {
   id: string
   name: string
   products: number
-  preorderWhen: string
+  preorderWhen: PreorderWhen
   startsAt: string | null
   endsAt: string | null
   status: boolean
@@ -12,11 +13,13 @@ interface Preorder {
   updatedAt: string
 }
 
-interface PreordersResponse {
-  success: boolean
-  message: string
+interface PreordersResponse extends SuccessResponse {
   data: Preorder[]
   meta: Meta
 }
 
-export type { Preorder, PreordersResponse }
+interface PreorderDetailResponse extends SuccessResponse {
+  data: Preorder | null
+}
+
+export type { Preorder, PreorderDetailResponse, PreordersResponse }

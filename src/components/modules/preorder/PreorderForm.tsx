@@ -1,5 +1,6 @@
 'use client'
 
+import { createPreorder, updatePreorder } from '@/app/actions/preorder'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -26,10 +27,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { PreorderWhen } from '@/generated/prisma/enums'
+import { date } from '@/lib/date'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import z from 'zod/v3'
 
 const formSchema = z.object({
@@ -38,7 +42,7 @@ const formSchema = z.object({
     .min(1, { message: 'Preorder name is required' })
     .max(255, { message: 'Preorder name must be less than 255 characters' }),
   products: z.string().min(1, 'Product number is required'),
-  preorderWhen: z.enum(['REGARDLESS_OF_STOCK', 'OUT_OF_STOCK'], {
+  preorderWhen: z.enum(Object.values(PreorderWhen) as [string, ...string[]], {
     message:
       "Preorder condition must be either 'REGARDLESS_OF_STOCK' or 'OUT_OF_STOCK'",
   }),
@@ -51,9 +55,11 @@ type FormSchemaType = z.infer<typeof formSchema>
 
 interface PreorderFormProps {
   data?: FormSchemaType
+  id?: string
+  isEdit?: boolean
 }
 
-const PreorderForm = ({ data }: PreorderFormProps) => {
+const PreorderForm = ({ data, id, isEdit }: PreorderFormProps) => {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,8 +73,33 @@ const PreorderForm = ({ data }: PreorderFormProps) => {
     mode: 'onChange',
   })
 
-  const onSubmit = (data: FormSchemaType) => {
-    console.log(data)
+  const onSubmit = async (formData: FormSchemaType) => {
+    try {
+      const apiData = {
+        name: formData.name,
+        products: parseInt(formData.products, 10),
+        preorderWhen: formData.preorderWhen as PreorderWhen,
+        startsAt: formData.startsAt ? date.localToUtc(formData.startsAt) : null,
+        endsAt: formData.endsAt ? date.localToUtc(formData.endsAt) : null,
+        status: formData.status!,
+      }
+
+      if (isEdit && id) {
+        const updated = await updatePreorder(id, apiData)
+        if (updated.success) {
+          toast.success('Preorder updated successfully')
+        }
+      } else {
+        const created = await createPreorder(apiData)
+        if (created.success) {
+          toast.success('Preorder created successfully')
+        }
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to save preorder'
+      )
+    }
   }
 
   return (

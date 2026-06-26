@@ -5,11 +5,9 @@ interface Meta {
   totalPage: number
 }
 
-interface ApiResponse<T> {
+interface SuccessResponse {
   success: boolean
   message: string
-  data?: T
-  meta?: Meta
 }
 
-export type { ApiResponse, Meta }
+export type { Meta, SuccessResponse }
