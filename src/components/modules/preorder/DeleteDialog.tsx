@@ -1,4 +1,3 @@
-// components/DeleteDialog.tsx
 'use client'
 
 import { deletePreorder } from '@/app/actions/preorder'
