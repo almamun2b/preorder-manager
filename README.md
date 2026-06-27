@@ -47,7 +47,7 @@ pnpm install
 2. Run database migrations:
 
 ```bash
-pnpm run db:push
+pnpm db:push
 ```
 
 **For Turso (Remote SQLite):**
