@@ -18,13 +18,18 @@ import { Trash2 } from 'lucide-react'
 interface DeleteDialogProps {
   preorderName: string
   onConfirm: () => void
+  disabled?: boolean
 }
 
-export function DeleteDialog({ preorderName, onConfirm }: DeleteDialogProps) {
+export function DeleteDialog({
+  preorderName,
+  onConfirm,
+  disabled,
+}: DeleteDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" disabled={disabled}>
           <Trash2 className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
@@ -38,7 +43,9 @@ export function DeleteDialog({ preorderName, onConfirm }: DeleteDialogProps) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
+          <AlertDialogAction disabled={disabled} onClick={onConfirm}>
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

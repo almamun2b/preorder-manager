@@ -35,6 +35,7 @@ interface PreorderTableProps {
 export function PreordersTable({ data }: PreorderTableProps) {
   const router = useRouter()
   const { data: preorders, meta } = data
+  const [isPending, setIsPending] = useState(false)
   const [queryData, setQueryData] = useState<TPreordersQueryParams>({
     status: 'all',
     page: meta?.page || 1,
@@ -89,6 +90,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
 
   const handleDelete = async (id: string) => {
     try {
+      setIsPending(true)
       const result = await deletePreorder(id)
       if (result.success) {
         toast.success('Preorder deleted successfully')
@@ -98,11 +100,14 @@ export function PreordersTable({ data }: PreorderTableProps) {
       toast.error(
         error instanceof Error ? error.message : 'Failed to delete preorder'
       )
+    } finally {
+      setIsPending(false)
     }
   }
 
   const handleStatusToggle = async (id: string, currentStatus: boolean) => {
     try {
+      setIsPending(true)
       const result = await updatePreorderStatus(id, !currentStatus)
       if (result.success) {
         toast.success('Status updated successfully')
@@ -112,6 +117,8 @@ export function PreordersTable({ data }: PreorderTableProps) {
       toast.error(
         error instanceof Error ? error.message : 'Failed to update status'
       )
+    } finally {
+      setIsPending(false)
     }
   }
 
@@ -228,6 +235,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                     </TableCell>
                     <TableCell>
                       <Switch
+                        disabled={isPending}
                         checked={order.status}
                         onCheckedChange={() =>
                           handleStatusToggle(order.id, order.status)
@@ -242,6 +250,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                         </Link>
                       </Button>
                       <DeleteDialog
+                        disabled={isPending}
                         preorderName={order.name}
                         onConfirm={() => handleDelete(order.id)}
                       />

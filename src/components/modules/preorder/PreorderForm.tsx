@@ -30,7 +30,7 @@ import { Switch } from '@/components/ui/switch'
 import { PreorderWhen } from '@/generated/prisma/enums'
 import { date } from '@/lib/date'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -122,8 +122,17 @@ const PreorderForm = ({ data, id, isEdit }: PreorderFormProps) => {
           <Button variant="outline" asChild className="h-9 px-3">
             <Link href="/preorder">Cancel</Link>
           </Button>
-          <Button type="submit" className="h-9 px-3" form="form-preorder">
-            Save changes
+          <Button
+            type="submit"
+            disabled={form.formState.isLoading || form.formState.isSubmitting}
+            className="h-9 px-3"
+            form="form-preorder"
+          >
+            Save changes{' '}
+            {form.formState.isLoading ||
+              (form.formState.isSubmitting && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ))}
           </Button>
         </div>
       </div>
@@ -369,8 +378,17 @@ const PreorderForm = ({ data, id, isEdit }: PreorderFormProps) => {
             >
               <Link href="/preorder">Cancel</Link>
             </Button>
-            <Button type="submit" form="form-preorder" className="h-9 px-3">
-              Save changes
+            <Button
+              type="submit"
+              disabled={form.formState.isLoading || form.formState.isSubmitting}
+              form="form-preorder"
+              className="h-9 px-3"
+            >
+              Save changes{' '}
+              {form.formState.isLoading ||
+                (form.formState.isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ))}
             </Button>
           </Field>
         </CardFooter>

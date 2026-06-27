@@ -71,6 +71,7 @@ const createPreorder = async (data: TCreatePreorder) => {
 
 const updatePreorder = async (id: string, data: TUpdatePreorder) => {
   try {
+    console.log(JSON.stringify(data, null, 2), 'Mamun')
     const { data: response } = await $fetch.patch<
       PreorderDetailResponse,
       TUpdatePreorder
