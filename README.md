@@ -107,6 +107,7 @@ Open [http://localhost:3000](http://localhost:3000)
 
 This project uses ESLint, Prettier, and Husky for maintaining code quality:
 
+- **TypeScript**: Type checking for JavaScript/TypeScript code
 - **ESLint**: Lints JavaScript/TypeScript code for errors and best practices
 - **Prettier**: Formats code consistently across the project
 - **Husky**: Git hooks that run lint-staged on pre-commit to ensure only clean code is committed
