@@ -1,6 +1,6 @@
 'use client'
 
-import { deletePreorder, updatePreorderStatus } from '@/app/actions/preorder'
+import { updatePreorderStatus } from '@/app/actions/preorder'
 import { TPreordersQueryParams } from '@/backend/modules/preorder/preorders.type'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -35,7 +35,7 @@ interface PreorderTableProps {
 export function PreordersTable({ data }: PreorderTableProps) {
   const router = useRouter()
   const { data: preorders, meta } = data
-  const [isPending, setIsPending] = useState(false)
+  const [pendingId, setPendingId] = useState<string | null>(null)
   const [queryData, setQueryData] = useState<TPreordersQueryParams>({
     status: 'all',
     page: meta?.page || 1,
@@ -88,26 +88,9 @@ export function PreordersTable({ data }: PreorderTableProps) {
     navigate({ sortOrder: value, page: 1 })
   }
 
-  const handleDelete = async (id: string) => {
-    try {
-      setIsPending(true)
-      const result = await deletePreorder(id)
-      if (result.success) {
-        toast.success('Preorder deleted successfully')
-        // router.refresh()
-      }
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to delete preorder'
-      )
-    } finally {
-      setIsPending(false)
-    }
-  }
-
   const handleStatusToggle = async (id: string, currentStatus: boolean) => {
     try {
-      setIsPending(true)
+      setPendingId(id)
       const result = await updatePreorderStatus(id, !currentStatus)
       if (result.success) {
         toast.success('Status updated successfully')
@@ -118,7 +101,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
         error instanceof Error ? error.message : 'Failed to update status'
       )
     } finally {
-      setIsPending(false)
+      setPendingId(null)
     }
   }
 
@@ -235,7 +218,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                     </TableCell>
                     <TableCell>
                       <Switch
-                        disabled={isPending}
+                        disabled={pendingId === order.id}
                         checked={order.status}
                         onCheckedChange={() =>
                           handleStatusToggle(order.id, order.status)
@@ -249,11 +232,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
                           <Pencil className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <DeleteDialog
-                        disabled={isPending}
-                        preorderName={order.name}
-                        onConfirm={() => handleDelete(order.id)}
-                      />
+                      <DeleteDialog preorderName={order.name} id={order.id} />
                     </TableCell>
                   </TableRow>
                 ))
