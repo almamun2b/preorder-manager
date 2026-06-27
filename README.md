@@ -61,7 +61,7 @@ pnpm db:push
    - `DATABASE_URL` - Your Turso database URL (e.g., `libsql://your-db.turso.io`)
    - `DATABASE_AUTH_TOKEN` - Your Turso auth token (only required for remote Turso DB)
 5. Run database migrations:
-6. Follow the link: [Turso with PrismaW](https://docs.turso.tech/sdk/ts/orm/prisma)
+6. Follow the link: [Turso with Prisma](https://docs.turso.tech/sdk/ts/orm/prisma)
 
 ```bash
 pnpm db:push
