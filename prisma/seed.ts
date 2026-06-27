@@ -5,22 +5,6 @@ async function main() {
   const result = await prisma.preorder.createMany({
     data: [
       {
-        name: 'iPhone 18 Pro Max',
-        products: 100,
-        preorderWhen: PreorderWhen.REGARDLESS_OF_STOCK,
-        startsAt: new Date('2026-07-01T00:00:00Z'),
-        endsAt: new Date('2026-07-31T23:59:59Z'),
-        status: true,
-      },
-      {
-        name: 'MacBook Pro M7',
-        products: 50,
-        preorderWhen: PreorderWhen.OUT_OF_STOCK,
-        startsAt: new Date('2026-08-01T00:00:00Z'),
-        endsAt: new Date('2026-08-15T23:59:59Z'),
-        status: true,
-      },
-      {
         name: 'AirPods Pro 4',
         products: 25,
         preorderWhen: PreorderWhen.OUT_OF_STOCK,

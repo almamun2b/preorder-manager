@@ -10,6 +10,7 @@ import { $fetch } from '@/lib/$fetch'
 import type { QueryParams } from '@/lib/fetch'
 import { PreorderDetailResponse, PreordersResponse } from '@/types/preorder'
 import { revalidateTag } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 const CACHE_TAGS = {
   PREORDERS: 'preorders',
@@ -63,6 +64,8 @@ const createPreorder = async (data: TCreatePreorder) => {
   } catch (error) {
     console.error('Failed to create preorder:', error)
     throw new Error('Failed to create preorder. Please try again.')
+  } finally {
+    redirect('/preorder')
   }
 }
 
@@ -80,6 +83,8 @@ const updatePreorder = async (id: string, data: TUpdatePreorder) => {
   } catch (error) {
     console.error('Failed to update preorder:', error)
     throw new Error('Failed to update preorder. Please try again.')
+  } finally {
+    redirect('/preorder')
   }
 }
 
@@ -90,8 +95,8 @@ const updatePreorderStatus = async (id: string, status: boolean) => {
       TUpdateStatus
     >(`/preorders/${id}/status`, { status })
 
-    revalidateTag(CACHE_TAGS.PREORDERS, 'max')
-    revalidateTag(CACHE_TAGS.PREORDER(id), 'max')
+    revalidateTag(CACHE_TAGS.PREORDERS, { expire: 0 })
+    revalidateTag(CACHE_TAGS.PREORDER(id), { expire: 0 })
 
     return response
   } catch (error) {
@@ -106,7 +111,7 @@ const deletePreorder = async (id: string) => {
       `/preorders/${id}`
     )
 
-    revalidateTag(CACHE_TAGS.PREORDERS, 'max')
+    revalidateTag(CACHE_TAGS.PREORDERS, { expire: 0 })
     return response
   } catch (error) {
     console.error('Failed to delete preorder:', error)

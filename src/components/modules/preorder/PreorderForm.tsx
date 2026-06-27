@@ -96,6 +96,7 @@ const PreorderForm = ({ data, id, isEdit }: PreorderFormProps) => {
         }
       }
     } catch (error) {
+      if ((error as Error).message.includes('NEXT_REDIRECT')) return
       toast.error(
         error instanceof Error ? error.message : 'Failed to save preorder'
       )

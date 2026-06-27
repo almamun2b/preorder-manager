@@ -7,8 +7,15 @@ interface PreorderPageProps {
 }
 
 const PreorderPage = async ({ searchParams }: PreorderPageProps) => {
-  const queryParams = await searchParams
+  const rawQueryParams = await searchParams
 
+  const queryParams: TPreordersQueryParams = {
+    page: rawQueryParams.page ?? 1,
+    limit: rawQueryParams.limit ?? 8,
+    sortBy: rawQueryParams.sortBy ?? 'createdAt',
+    sortOrder: rawQueryParams.sortOrder ?? 'desc',
+    status: rawQueryParams.status ?? 'all',
+  }
   const preorders = await getAllPreorders(queryParams)
 
   if (!preorders.success) {

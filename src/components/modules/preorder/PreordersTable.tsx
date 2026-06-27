@@ -92,7 +92,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
       const result = await deletePreorder(id)
       if (result.success) {
         toast.success('Preorder deleted successfully')
-        router.refresh()
+        // router.refresh()
       }
     } catch (error) {
       toast.error(
@@ -106,7 +106,7 @@ export function PreordersTable({ data }: PreorderTableProps) {
       const result = await updatePreorderStatus(id, !currentStatus)
       if (result.success) {
         toast.success('Status updated successfully')
-        router.refresh()
+        // router.refresh()
       }
     } catch (error) {
       toast.error(
