@@ -42,22 +42,43 @@ pnpm install
 
 **For Local SQLite:**
 
+1. Set `DATABASE_URL` in `.env` to `file:./prisma/dev.db`
+2. Run database migrations:
+
 ```bash
-pnpm db:push
+pnpm run db:push
 ```
 
 **For Turso (Remote SQLite):**
 
 1. Create a Turso account at [turso.tech](https://turso.tech)
-2. Set up your database and get the connection URL and auth token
-3. Update `.env` with your Turso credentials:
-   - `DATABASE_URL` - Your Turso database URL
+2. Create a new database in Turso dashboard
+3. Get your database URL and auth token from Turso
+4. Update `.env` with your Turso credentials:
+   - `DATABASE_URL` - Your Turso database URL (e.g., `libsql://your-db.turso.io`)
    - `DATABASE_AUTH_TOKEN` - Your Turso auth token (only required for remote Turso DB)
-4. Run migrations:
+5. Run database migrations:
 
 ```bash
 pnpm db:push
 ```
+
+### Seeding Sample Data
+
+To populate your database with sample preorder data for testing:
+
+```bash
+pnpm db:seed
+```
+
+This will create 8 sample preorders with various configurations including:
+
+- Active and inactive preorders
+- Different date ranges
+- Various preorder conditions (REGARDLESS_OF_STOCK, OUT_OF_STOCK)
+- Different product quantities
+
+The seed data includes products like AirPods Pro 4, Apple Watch Series 12, iPad Ultra, Vision Pro 2, and more.
 
 ### Development
 
@@ -79,6 +100,7 @@ Open [http://localhost:3000](http://localhost:3000)
 - `pnpm db:studio` - Open Prisma Studio
 - `pnpm db:push` - Push schema to database
 - `pnpm db:generate` - Generate Prisma client
+- `pnpm db:seed` - Seed database with sample data
 
 ## Code Quality
 
