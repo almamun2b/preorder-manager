@@ -2,6 +2,8 @@
 
 A modern preorder management system built with Next.js 16, React 19, and Prisma ORM.
 
+**Live Demo**: [https://preorder-manager-m.vercel.app/](https://preorder-manager-m.vercel.app/)
+
 ## Features
 
 - **Database Flexibility**: Seamlessly switch between local SQLite and remote [Turso](https://turso.tech) SQLite databases using `@prisma/adapter-libsql`. The libsql adapter provides unified support for both environments without code changes.
