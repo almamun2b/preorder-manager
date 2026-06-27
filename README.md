@@ -5,6 +5,7 @@ A modern preorder management system built with Next.js 16, React 19, and Prisma 
 ## Features
 
 - **Database Flexibility**: Seamlessly switch between local SQLite and remote [Turso](https://turso.tech) SQLite databases using `@prisma/adapter-libsql`. The libsql adapter provides unified support for both environments without code changes.
+- **Separated Frontend & Backend**: Clean architecture with distinct frontend and backend layers. Frontend communicates with the database exclusively through backend API routes - no direct database access from the client side for enhanced security.
 - **Custom Query Builder**: Raw SQL query builder in `src/backend/utils/queryBuilder.ts` for optimized database operations with case-insensitive search support using `LOWER()` and `LIKE` for SQLite.
 - **Custom Fetch Utility**: Type-safe HTTP client (`src/lib/fetch/index.ts`) with caching, error handling, interceptors, and Next.js ISR (Incremental Static Regeneration) support via cache tags.
 - **Server Actions**: Optimistic mutations with automatic cache revalidation using `revalidatePath` for seamless user experience.
